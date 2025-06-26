@@ -60,6 +60,12 @@ const Meeting: React.FC = () => {
   const userName = user?.name || localStorage.getItem('guestName') || 'Guest';
   const userId = user?.id || `guest-${Date.now()}`;
 
+  // Add a state to track camera access error
+  const [cameraError, setCameraError] = useState<string | null>(null);
+
+  // Add a state to track if camera is required and not available
+  const [cameraRequired, setCameraRequired] = useState(false);
+
   // Peer connection callbacks
   const handleRemoteStream = useCallback((stream: MediaStream, peerId: string) => {
     const participant = participants.find(p => p.peerId === peerId);
@@ -139,8 +145,14 @@ const Meeting: React.FC = () => {
       // Initialize peer connection
       const peerId = initializePeer();
       
-      // Get user media
-      await initializeLocalStream();
+      // Get user media (camera is required)
+      const stream = await initializeLocalStream();
+      if (!stream) {
+        setCameraRequired(true);
+        return;
+      } else {
+        setCameraRequired(false);
+      }
       
       // Join meeting via socket
       if (socket && isConnected) {
@@ -241,9 +253,14 @@ const Meeting: React.FC = () => {
       if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
       }
+      setCameraError(null); // Clear any previous error
+      return stream;
     } catch (error) {
       console.error('Error accessing media devices:', error);
+      setCameraError('Camera/microphone access denied. Please allow access to join the meeting with video.');
       showNotification('Camera/microphone access denied');
+      setIsVideoOn(false);
+      return null;
     }
   };
 
@@ -399,6 +416,18 @@ const Meeting: React.FC = () => {
     }
   };
 
+  // Add a retry handler for camera access
+  const handleRetryCamera = () => {
+    initializeLocalStream();
+  };
+
+  // Add effect to re-request camera if lost
+  useEffect(() => {
+    if (!localStream.current && !cameraRequired) {
+      initializeLocalStream();
+    }
+  }, [cameraRequired]);
+
   return (
     <div ref={meetingContainerRef} className="h-screen bg-gray-900 flex flex-col">
       {/* Notifications */}
@@ -412,6 +441,33 @@ const Meeting: React.FC = () => {
           </div>
         ))}
       </div>
+      {/* Camera error notification and retry button */}
+      {cameraError && (
+        <div className="fixed top-20 right-4 z-50 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg max-w-sm flex flex-col items-start">
+          <span>{cameraError}</span>
+          <button
+            onClick={handleRetryCamera}
+            className="mt-2 px-3 py-1 bg-white text-red-600 rounded hover:bg-gray-100 font-semibold"
+          >
+            Retry Camera Access
+          </button>
+        </div>
+      )}
+
+      {/* Block UI if camera is required and not available */}
+      {cameraRequired && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex flex-col items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+            <span className="text-red-600 text-xl font-bold mb-4">Camera access is required to join the meeting.</span>
+            <button
+              onClick={handleRetryCamera}
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-semibold"
+            >
+              Retry Camera Access
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Meeting Header */}
       <div className="bg-gray-800 text-white p-4 flex items-center justify-between">
