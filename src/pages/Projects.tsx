@@ -13,22 +13,15 @@ const Projects: React.FC = () => {
     github?: string;
   }> = [
     {
-      name: "ZoomClone - Full-Stack Video Conferencing",
-      url: "#current-project",
-      description: "A complete video conferencing platform with real-time chat, participant management, and WebRTC integration. Built with React, Node.js, Socket.io, and MongoDB.",
+      name: "spotfiy-clone",
+      url: "https://sportfiy-prem.netlify.app/",
+      description: "A responsive and modern full-stack sports platform featuring live scores, news, team information, and interactive features with beautiful UI design.",
       category: "Full-Stack",
-      tech: ["React", "Node.js", "Socket.io", "WebRTC", "MongoDB", "TypeScript"],
-      status: "Current Project",
+      tech: ["React", "Node.js", "Responsive Design", "Modern UI", "Full-Stack"],
+      status: "Latest Project",
       featured: true
     },
-    {
-      name: "Sportify",
-      url: "https://sportifypremgaikwad.netlify.app/",
-      description: "A responsive sports platform featuring live scores, news, and team information with modern UI design.",
-      category: "Responsive",
-      tech: ["HTML", "CSS", "JavaScript", "Responsive Design"],
-      status: "Completed"
-    },
+
     {
       name: "Car Project",
       url: "https://carproject1.netlify.app/",
@@ -169,6 +162,8 @@ const Projects: React.FC = () => {
     switch (status) {
       case 'Current Project':
         return 'bg-yellow-100 text-yellow-800';
+      case 'Latest Project':
+        return 'bg-purple-100 text-purple-800';
       case 'Completed':
         return 'bg-green-100 text-green-800';
       case 'AI-Assisted':
@@ -220,10 +215,10 @@ const Projects: React.FC = () => {
         {selectedCategory === 'All' && (
           <div className="mb-16 animate-fade-in">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-2">
-              Featured Project
+              Latest Project
               <span className="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold animate-pulse" title="Latest Project">Latest</span>
             </h2>
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8 text-white">
+            <div className="bg-gradient-to-r from-green-600 to-blue-600 rounded-lg p-8 text-white">
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
                   <div className="flex items-center space-x-2 mb-4">
@@ -231,31 +226,33 @@ const Projects: React.FC = () => {
                       Latest Project
                     </span>
                   </div>
-                  <h3 className="text-3xl font-bold mb-4">ZoomClone - Video Conferencing Platform</h3>
+                  <h3 className="text-3xl font-bold mb-4">spotfiy-clone - Full-Stack Sports Platform</h3>
                   <p className="text-blue-100 mb-6">
-                    A fully functional video conferencing application built with React, Node.js, Socket.io, 
-                    and WebRTC. Features include real-time chat, participant management, user authentication, 
-                    and secure meeting rooms.
+                    A responsive and modern full-stack sports platform featuring live scores, news, team information, 
+                    and interactive features with beautiful UI design. Built with React and Node.js for optimal performance.
                   </p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {["React", "Node.js", "Socket.io", "WebRTC", "MongoDB", "TypeScript"].map((tech) => (
+                    {["React", "Node.js", "Responsive Design", "Modern UI", "Full-Stack"].map((tech) => (
                       <span key={tech} className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm">
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <button
-                    onClick={() => window.location.href = '/'}
-                    className="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+                  <a
+                    href="https://sportfiy-prem.netlify.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white text-green-600 px-6 py-3 rounded-lg hover:bg-green-50 transition-colors font-medium inline-flex items-center space-x-2"
                   >
-                    Try Live Demo
-                  </button>
+                    <span>View Live Demo</span>
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
                 </div>
                 <div className="text-center">
                   <div className="bg-white bg-opacity-10 rounded-lg p-6">
                     <Globe className="h-16 w-16 mx-auto mb-4" />
                     <p className="text-lg font-semibold">Full-Stack Application</p>
-                    <p className="text-blue-100">Real-time Communication</p>
+                    <p className="text-blue-100">Responsive Sports Platform</p>
                   </div>
                 </div>
               </div>
